@@ -320,7 +320,7 @@ namespace videocore { namespace iOS {
             }
             
             AVCaptureDeviceInput *newVideoInput = [[AVCaptureDeviceInput alloc] initWithDevice:newCamera error:nil];
-            
+
             [session addInput:newVideoInput];
             
             [session commitConfiguration];
@@ -335,14 +335,9 @@ namespace videocore { namespace iOS {
     CameraSource::reorientCamera()
     {
         if(!m_captureSession) return;
-        
-        auto orientation = m_useInterfaceOrientation ? [[UIApplication sharedApplication] statusBarOrientation] : [[UIDevice currentDevice] orientation];
-        
-        // use interface orientation as fallback if device orientation is facedown, faceup or unknown
-        if(orientation==UIDeviceOrientationFaceDown || orientation==UIDeviceOrientationFaceUp || orientation==UIDeviceOrientationUnknown) {
-            orientation =[[UIApplication sharedApplication] statusBarOrientation];
-        }
-        
+  
+        auto orientation = UIDeviceOrientationLandscapeLeft; //m_useInterfaceOrientation ? [[UIApplication sharedApplication] statusBarOrientation] : [[UIDevice currentDevice] orientation];
+      
         bool reorient = false;
         
         AVCaptureSession* session = (AVCaptureSession*)m_captureSession;
@@ -350,8 +345,8 @@ namespace videocore { namespace iOS {
         
         for (AVCaptureVideoDataOutput* output in session.outputs) {
             for (AVCaptureConnection * av in output.connections) {
-                
-                switch (orientation) {
+
+              switch (orientation) {
                         // UIInterfaceOrientationPortraitUpsideDown, UIDeviceOrientationPortraitUpsideDown
                     case UIInterfaceOrientationPortraitUpsideDown:
                         if(av.videoOrientation != AVCaptureVideoOrientationPortraitUpsideDown) {
@@ -434,13 +429,13 @@ namespace videocore { namespace iOS {
                                  glm::vec3(m_size.w / m_targetSize.vw, //
                                            m_size.h / m_targetSize.vh, // size is a percentage for scaling.
                                            1.f));
-                
+              
                 m_matrix = mat;
             }
             /**! END SECTION TO BE REMOVED **/
             
             VideoBufferMetadata md(1.f / float(m_fps));
-            
+          
             md.setData(1, m_matrix, shared_from_this());
             
             CVPixelBufferRetain(pixelBufferRef);
