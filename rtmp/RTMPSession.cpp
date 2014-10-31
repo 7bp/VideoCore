@@ -866,6 +866,12 @@ namespace videocore
         uint8_t *start = p;
         std::map<std::string, std::string> props;
         
+        // temporary fix to start streaming to FMS
+        if (!p || !*p) {
+           std::string empty("NetStream.Publish.Start");
+           return empty;
+        }
+        
         // skip over the packet id
         double num = get_double(p+1); // num
         p += sizeof(num) + 1;
